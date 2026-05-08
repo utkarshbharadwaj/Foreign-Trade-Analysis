@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond the Deficit – ISI Macroeconomic Defense</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Official Academic Color Palette */
+    --bg-color: #FFFFFF;
+    --text-main: #1A1A1A;     
+    --text-muted: #555555;    
+    
+    --primary: #003366;       
+    --highlight: #8B0000;     
+    --border: #E0E0E0;        
+    --box-bg: #F9F9F9;        
+    
+    --slide-w: 100vw;
+    --slide-h: 100vh;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    overflow: hidden; /* Prevents scrollbars */
+  }
+
+  /* ── Presentation Engine ── */
+  .slide-container {
+    display: none;
+    width: var(--slide-w);
+    height: var(--slide-h);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .slide-container.active { 
+    display: flex; 
+    flex-direction: column; 
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Layout & Structure ── */
+  .header-bar {
+    padding: 30px 60px 15px 60px;
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-shrink: 0; /* Prevents header from shrinking */
+  }
+  .header-content h1 {
+    font-family: 'Lora', serif;
+    font-size: 38px;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .header-content .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  .slide-content {
+    flex: 1;
+    min-height: 0; /* CRITICAL FIX: Stops nested flex items from expanding infinitely */
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Two-Column Grid ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    height: 100%;
+  }
+
+  /* ── Typography & Elements ── */
+  p { font-size: 20px; line-height: 1.7; margin-bottom: 20px; }
+  ul { font-size: 20px; line-height: 1.7; margin-left: 25px; margin-bottom: 20px; }
+  li { margin-bottom: 12px; }
+  
+  .highlight {
+    color: var(--highlight);
+    font-weight: 700;
+    background-color: rgba(139, 0, 0, 0.05);
+    padding: 0 4px;
+  }
+
+  .data-box {
+    background-color: var(--box-bg);
+    border-left: 4px solid var(--primary);
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+  .data-box.alert { border-left-color: var(--highlight); }
+  .data-box h3 {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .data-box.alert h3 { color: var(--highlight); }
+
+  /* ── Visualizations (Bulletproof Image Scaling) ── */
+  .plot-wrapper {
+    flex: 1;
+    min-height: 0; /* CRITICAL FIX: Forces container to respect screen bounds */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  }
+  .plot-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Locks aspect ratio so it never squishes */
+    display: block;
+  }
+
+  /* ── Title Slide Specifics ── */
+  .title-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    padding: 0 100px;
+  }
+  .title-slide img.logo {
+    width: 150px;
+    margin-bottom: 30px;
+  }
+  .title-slide h1 {
+    font-family: 'Lora', serif;
+    font-size: 64px;
+    color: var(--primary);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .title-slide h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 26px;
+    color: var(--text-muted);
+    margin-bottom: 60px;
+  }
+  .title-slide .authors {
+    font-size: 18px;
+    color: var(--text-main);
+    line-height: 1.8;
+  }
+  .title-slide .date {
+    margin-top: 40px;
+    font-size: 16px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* ── Footer & Controls ── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 60px;
+    border-top: 1px solid var(--border);
+    background-color: var(--bg-color);
+    flex-shrink: 0;
+  }
+  .footer-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .controls button {
+    background-color: white;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .controls button:hover {
+    background-color: var(--primary);
+    color: white;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container active" id="slide-1">
+  <div class="title-slide">
+    <img src="isi_logo.png" alt="ISI Logo" class="logo">
+    <h1>Beyond the Deficit</h1>
+    <h2>An Empirical Analysis of India's Foreign Trade Dynamics (1990–2025)</h2>
+    <div class="date">Indian Statistical Institute • May 2026</div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-2">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Introduction</div>
+      <h1>Motivation & Methodology</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <div class="data-box">
+          <h3>The Macroeconomic Context</h3>
+          <p>India's merchandise trade has run a persistent deficit since liberalization in 1991. Media and policy narratives often cite nominal Rupee figures to demonstrate an exponentially growing economic gap.</p>
+          <p>Our objective is to move beyond surface-level figures. We aim to empirically isolate the true structural drivers of the deficit by stripping away the mathematical distortions of currency depreciation and global price inflation.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Data & Transformation Protocol</h3>
+          <ul>
+            <li><strong>Primary Source:</strong> RBI Database on the Indian Economy (Table No. 32: Foreign Trade).</li>
+            <li><strong>Scope:</strong> 429 consecutive monthly observations (Jan 1990 – Dec 2025).</li>
+            <li><strong>Methodological Control:</strong> To measure pure physical volume, all monetary values were converted to <span class="highlight">Constant Dec 2025 USD</span> utilizing the FRED Consumer Price Index (CPIAUCSL).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-3">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Analytical Scope</div>
+      <h1>The Four-Part Structural Thesis</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <p>By applying a constant-dollar methodology to 35 years of RBI data, we structured our empirical analysis to answer four critical questions regarding the Indian economy:</p>
+    <br>
+    <div class="data-box">
+      <h3>1. The Currency Illusion</h3>
+      <p>How much of the reported deficit "explosion" since 1991 is a genuine physical expansion versus a mathematical distortion caused by Rupee depreciation?</p>
+    </div>
+    <div class="data-box">
+      <h3>2. The Energy Deficit</h3>
+      <p>If we strip away inelastic crude oil imports, is India's core domestic manufacturing sector actually failing on the global stage?</p>
+    </div>
+    <div class="data-box">
+      <h3>3. Federal Policy Efficacy</h3>
+      <p>Did the "Make in India" initiative structurally accelerate physical export volumes prior to the pandemic, or merely sustain existing momentum?</p>
+    </div>
+    <div class="data-box">
+      <h3>4. The Dependency Trap</h3>
+      <p>As India attempts to scale its manufacturing exports, is the non-oil sector becoming more self-reliant or increasingly trapped in an import-dependency loop?</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-4">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 1: The Currency Illusion</div>
+      <h1>Isolating Physical Trade from Currency Depreciation</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <p>Public reporting overwhelmingly denominates India's trade deficit in <strong>Nominal Indian Rupees (INR)</strong>.</p>
+        <p>Since 1991, the Rupee has experienced persistent, severe depreciation against the US Dollar. Concurrently, the global economy has experienced decades of compounding price inflation.</p>
+        <div class="data-box">
+          <h3>The Hypothesis</h3>
+          <p>The apparent parabolic explosion of India's trade deficit is largely a mathematical illusion driven by a denominator effect (currency devaluation), rather than a geometric expansion of the physical trade gap.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Methodological Approach</h3>
+          <p>We established a <strong>Base-100 Index</strong> (where 1991 = 100) to track two distinct vectors over 35 years:</p>
+          <ul>
+            <li><strong>Nominal INR Deficit:</strong> Unadjusted data (standard media reporting).</li>
+            <li><strong>Constant USD Deficit:</strong> Adjusted for both the exchange rate and global inflation to reflect true physical volume.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-5">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 1: The Currency Illusion</div>
+      <h1>Indexed Deficit Growth (Base 1991 = 100)</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="plot-wrapper">
+      <img src="plot_1.png" alt="Currency Valuation Divergence">
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-6">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 1: Findings</div>
+      <h1>A 10x Mathematical Distortion</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <div class="data-box">
+          <h3>The True Physical Growth</h3>
+          <p>When measured in inflation-adjusted Constant USD, the physical magnitude of the trade deficit grew by <span class="highlight">roughly 4,100%</span> from 1991 to 2025. While notable, the trajectory remains heavily bounded and relatively linear.</p>
+        </div>
+        <div class="data-box alert">
+          <h3>The Nominal INR Illusion</h3>
+          <p>The exact same physical trade gap, when reported in Nominal Rupees, appears to have grown by an astronomical <span class="highlight">46,100%</span>. The parabolic curve is an artifact of currency depreciation.</p>
+        </div>
+      </div>
+      <div>
+        <br><br>
+        <h2>Conclusion on Currency Reporting</h2>
+        <p>Evaluating India's macroeconomic health through nominal INR figures introduces catastrophic analytical bias. The perceived growth of the deficit is artificially magnified by a factor of ten.</p>
+        <p><strong>To ensure academic rigor, the remainder of this analysis utilizes Constant Dec 2025 USD exclusively.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-7">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 2: The Energy Deficit</div>
+      <h1>Isolating the Burden of Crude Oil</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <p>Having established the true volume of the deficit, we must identify its primary driver. The dominant narrative often attributes India's trade gap to a broad weakness in domestic manufacturing.</p>
+        <p>This ignores a critical structural reality: India is the world's <strong>third-largest importer of crude oil</strong>, an inelastic energy commodity.</p>
+        <div class="data-box">
+          <h3>The Hypothesis</h3>
+          <p>When crude oil is stripped from the ledger, India's core manufacturing sectors will demonstrate a trade balance significantly closer to equilibrium.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Methodological Approach</h3>
+          <ul>
+            <li>Utilized RBI's disaggregated Oil vs. Non-Oil data (available from 2011 onwards).</li>
+            <li>Calculated the Constant USD Balance for both the "Overall" economy and the isolated "Non-Oil" economy.</li>
+            <li>The vertical divergence between the resulting lines represents the exact physical capital outflow required for energy procurement.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-8">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 2: The Energy Deficit</div>
+      <h1>Overall Balance vs. Non-Oil Balance (Constant USD)</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="plot-wrapper">
+      <img src="plot_2.png" alt="The Energy Gap">
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-9">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 2: Findings</div>
+      <h1>A Structural Energy Problem, Not a Manufacturing Failure</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <div class="data-box">
+          <h3>Core Resilience of Non-Oil Trade</h3>
+          <p>When crude oil is mathematically stripped from the ledger, the Non-Oil Trade Balance <span class="highlight">hovers remarkably close to zero</span>. In several recorded months, India's core manufacturing sectors actively ran a physical trade surplus.</p>
+        </div>
+        <div class="data-box alert">
+          <h3>The Structural Energy Gap</h3>
+          <p>The Overall Trade Balance remains deeply negative. Because inflation has been controlled for, the massive vertical gap proves the deficit is a physical dependency on foreign energy.</p>
+        </div>
+      </div>
+      <div>
+        <br><br>
+        <h2>Conclusion on Manufacturing Health</h2>
+        <p>Characterizing India's trade deficit as a broad failure of domestic manufacturing is empirically inaccurate. Stripped of petroleum imports, India's core merchandise trade demonstrates significant resilience.</p>
+        <p><strong>Policy Implication:</strong> Accelerating domestic energy transitions (renewables, nuclear) will yield a more dramatic impact on the trade balance than generic manufacturing incentives.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-10">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 3: Federal Policy Efficacy</div>
+      <h1>Assessing "Make in India" (2014)</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <p>If domestic manufacturing is not fundamentally failing, did major federal interventions successfully elevate it?</p>
+        <p>In September 2014, the Government launched "Make in India." Evaluating this policy requires strict methodological controls: converting to Constant USD to measure <em>physical</em> output, and excluding post-2019 data to prevent COVID-19 volatility from skewing the regression slopes.</p>
+        <div class="data-box">
+          <h3>The Hypothesis</h3>
+          <p>The trajectory slope and Compound Annual Growth Rate (CAGR) of inflation-adjusted non-oil exports will show a statistically significant upward acceleration in the post-policy era.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Methodological Approach</h3>
+          <p>We partitioned the data into two controlled cohorts:</p>
+          <ul>
+            <li><strong>Era 1 (Baseline):</strong> Jan 2011 – Dec 2014</li>
+            <li><strong>Era 2 (Post-Launch):</strong> Jan 2015 – Dec 2019</li>
+          </ul>
+          <p>We executed a CAGR analysis on physical export volumes and generated a segmented linear regression to detect any structural breaks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-11">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 3: Federal Policy Efficacy</div>
+      <h1>Segmented Trend Analysis: Pre vs. Post Policy</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="plot-wrapper">
+      <img src="plot_3.png" alt="Make in India Analysis">
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-12">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 3: Findings</div>
+      <h1>A Linear Continuation, Not a Transformation</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <div class="data-box alert">
+          <h3>Stagnant Growth Velocity (CAGR)</h3>
+          <p>Mathematical calculations reveal no meaningful acceleration in physical export velocity. The policy <span class="highlight">failed to significantly compound</span> physical export volumes above the pre-existing baseline trend.</p>
+        </div>
+        <div class="data-box">
+          <h3>Parallel Trajectory Slopes</h3>
+          <p>Visual inspection of the segmented regression confirms the Era 2 slope is remarkably flat and nearly parallel to Era 1. No structural breakout occurred prior to the pandemic.</p>
+        </div>
+      </div>
+      <div>
+        <br><br>
+        <h2>Conclusion on Policy Impact</h2>
+        <p>During its first five years, the initiative failed to radically steepen India's manufacturing competitiveness trajectory. Stripped of pricing illusions, the policy's early footprint appears to be a mere continuation of momentum.</p>
+        <p><em>Caveat: Heavy manufacturing infrastructure requires substantial gestation. A 5-year window may capture implementation lags rather than ultimate efficacy.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-13">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 4: The Dependency Trap</div>
+      <h1>Manufacturing Self-Reliance vs. Import Elasticity</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <p>If export growth is relatively stagnant, what is occurring beneath the surface of the non-oil sector? A common assumption is that growing export volumes indicate a maturing, increasingly self-reliant manufacturing base.</p>
+        <p>This assumption fails if the sector exhibits <strong>high import elasticity</strong>. To produce one unit of manufactured export, India must import critical intermediate goods (semiconductors, APIs, machinery). Thus, scaling exports inherently scales imports.</p>
+        <div class="data-box">
+          <h3>The Hypothesis</h3>
+          <p>If manufacturing were becoming self-reliant, the physical CAGR of non-oil exports should substantially outpace non-oil imports. We hypothesize the opposite.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Methodological Approach</h3>
+          <ul>
+            <li>Isolated Non-Oil Exports and Imports (2011–2024).</li>
+            <li>Converted to Constant Dec 2025 USD to ensure we are measuring physical pallets of goods, not price fluctuations.</li>
+            <li>Plotted a shaded geometric ribbon mapping the absolute delta (the non-oil trade gap) between the two vectors over time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-14">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 4: The Dependency Trap</div>
+      <h1>Tracking the Physical Non-Oil Trade Gap</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="plot-wrapper">
+      <img src="plot_4.png" alt="Dependency Trap">
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-15">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Part 4: Findings</div>
+      <h1>Trapped in an Import-Dependency Loop</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <div class="grid-2">
+      <div>
+        <div class="data-box">
+          <h3>Diverging Physical Growth Rates</h3>
+          <p>Real Non-oil Exports CAGR: <strong>2.91%</strong></p>
+          <p>Real Non-oil Imports CAGR: <strong>3.16%</strong></p>
+          <p>Because imports already maintained a larger absolute base, this percentage disparity forces a geometric expansion of the structural deficit.</p>
+        </div>
+        <div class="data-box alert">
+          <h3>The Widening Structural Gap</h3>
+          <p>Even after eliminating all global inflation, the absolute physical non-oil trade gap <span class="highlight">expanded by 62.49%</span> between 2011 and 2024. The shaded ribbon grows unmistakably wider.</p>
+        </div>
+      </div>
+      <div>
+        <br><br>
+        <h2>Conclusion on Manufacturing Health</h2>
+        <p>India's domestic merchandise manufacturing remains deeply dependent on foreign capital goods and intermediate components.</p>
+        <p>As India attempts to scale its export volume, it structurally necessitates a simultaneous, disproportionate expansion of its import bill—effectively trapping the non-oil trade balance in an import-dependency loop.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-16">
+  <div class="header-bar">
+    <div class="header-content">
+      <div class="eyebrow">Methodology</div>
+      <h1>Limitations of the Study</h1>
+    </div>
+  </div>
+  <div class="slide-content">
+    <p>While this empirical analysis provides significant structural insights, it operates within specific analytical constraints:</p>
+    <div class="grid-2" style="margin-top: 20px;">
+      <div>
+        <div class="data-box">
+          <h3>Approximation of Physical Volume</h3>
+          <p>Nominal values were deflated by the US CPI, but the dataset lacks pure physical volume indices (e.g., tonnage). CPI is a robust proxy but cannot perfectly isolate complex price effects across highly heterogeneous non-oil sectors.</p>
+        </div>
+        <div class="data-box">
+          <h3>Merchandise Bias</h3>
+          <p>Only physical merchandise trade is tracked. India runs a massive global surplus in services (IT, BPO, consulting). Analyzing only merchandise significantly overstates the nation's true current account deficit.</p>
+        </div>
+      </div>
+      <div>
+        <div class="data-box">
+          <h3>Aggregation of Non-Oil Commodities</h3>
+          <p>The "Non-Oil" category remains heavily aggregated. Surges cannot be definitively attributed to specific sectors (e.g., consumer electronics versus gold imports), limiting the granularity of the assessment.</p>
+        </div>
+        <div class="data-box">
+          <h3>Bilateral Trade Obscurity</h3>
+          <p>Data is aggregated at the global macro level. Geopolitical dependencies and shifting bilateral asymmetries (such as India's heavily asymmetric merchandise deficit with China) cannot be assessed here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-container" id="slide-17">
+  <div class="title-slide">
+    <h1 style="margin-bottom: 10px;">Thank You</h1>
+    <h2 style="font-size: 20px;">End of Presentation</h2>
+    <br><br>
+    <div class="authors" style="text-align: left; background-color: var(--box-bg); padding: 30px; border-left: 4px solid var(--primary); border-radius: 8px;">
+      <strong>Research Conducted By Group 24:</strong>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+        <div>Utkarsh Bharadwaj</div>
+        <div>Rabi Shankar Sah</div>
+        <div>Garg Parashar</div>
+        <div>Abhinav</div>
+        <div>Aarav Chugh</div>
+        <div>Maddikuntala Pavankumar</div>
+      </div>
+    </div>
+    <div class="date" style="margin-top: 60px; font-size: 12px;">
+      Data Sources: Reserve Bank of India (Table 32) • FRED Economic Data (CPIAUCSL)
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-text">ISI Kolkata • Group 24 Defense</div>
+  <div class="controls">
+    <span id="slide-counter" style="margin-right: 20px; font-weight: 600; color: var(--primary);">1 / 17</span>
+    <button onclick="go(-1)">Previous</button>
+    <button onclick="go(1)">Next</button>
+    <button onclick="toggleFullScreen()">Fullscreen (F)</button>
+  </div>
+</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 17;
+
+  function showSlide(n) {
+    // Hide all slides
+    document.querySelectorAll('.slide-container').forEach(s => s.classList.remove('active'));
+    // Show target slide
+    document.getElementById('slide-' + n).classList.add('active');
+    // Update counter
+    document.getElementById('slide-counter').innerText = n + ' / ' + totalSlides;
+    currentSlide = n;
+  }
+
+  function go(direction) {
+    let nextSlide = currentSlide + direction;
+    if (nextSlide >= 1 && nextSlide <= totalSlides) {
+      showSlide(nextSlide);
+    }
+  }
+
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      go(1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(-1);
+    }
+    if (e.key === 'f' || e.key === 'F') {
+      toggleFullScreen();
+    }
+  });
+</script>
+
+</body>
+</html>
